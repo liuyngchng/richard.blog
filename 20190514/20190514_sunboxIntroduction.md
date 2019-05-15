@@ -33,3 +33,8 @@
 # 3. Best practice
 ## 3.1 Model
 对应数据库中的表结构
+## 3.2 VO
+## 3.3 DBManager
+## 3.4 Scheduled task
+## 3.5 埋点
+## 3.6 分库分表
