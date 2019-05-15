@@ -23,8 +23,9 @@
 - 目前数据库服务器上的磁盘是 6 个月的数据量所占的磁盘空间
 - 每个数据库所占磁盘约为 50GB
 - 按照 5 年的线性数据量进行预估.
-# 2. Disk 扩容方案
-## 2.1 数据库磁盘空间预估
+# 2. Disk 扩容方案  
+## 2.1 数据库磁盘空间预估  
+
 | No | db | Disk Space | Note |
 | -- | -- | -- | -- |
 | 1  | account | 500GB | 100GB/Y * 5 |
@@ -54,7 +55,7 @@ ps -ef | grep mysqld        -- check process
 ## 3.3 Mount disk
 ```
 mount disk1 /data/mysql/acount
-mount disk2 /data/mysql/game 
+mount disk2 /data/mysql/game
 mount disk3 /data/mysql/api_order
 mount disk4 /data/mysql/market
 mount disk5 /data/mysql/sunbox
@@ -67,7 +68,7 @@ du -h --max-depth =1
 ## 3.5 Copy data
 ```
 cd /var/lib
-tar -cf /data/mysql.tar ./mysql
+sudo tar -cf /data/mysql1.tar ./mysql  # 162上测试，./mysql 为 100GB，打包耗时 1h， /data 挂载的硬盘跟 ./mysql 挂载盘不同，机器配置与162相同
 cd /data
 tar -xf mysql.tar
 ```
@@ -91,3 +92,12 @@ mysql -uroot -p
 cd ../service/
 ./start.sh
 ```
+# 4. DB backup  
+
+| No| DB | disk | backup disk |  
+| -- | -- | -- | -- |  
+| 1 | account | /data/mysql/account | /data/mysql/api_order |
+| 2 | account | /data/mysql/api_order | /data/mysql/api_order |
+| 3 | account | /data/mysql/game | /data/mysql/market |
+| 4 | account | /data/mysql/market | /data/mysql/sunbox |
+| 5 | account | /data/mysql/sunbox | /data/mysql/account |
