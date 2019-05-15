@@ -38,3 +38,13 @@
 ## 3.4 Scheduled task
 ## 3.5 埋点
 ## 3.6 分库分表
+# 4. mvn package
+```
+cd {WORKSPACE_DIR}  
+git pull xxxxxx  
+sudo echo 'SUNBOX_ROOT={WORKSPACE_DIR}' >> /etc/profile  
+source /etc/profile  
+cd {WORKSPACE_DIR}/sunbox-pom/  
+mvn clean compile package -Dsunbox-group-version=1.0
+```
+这样 所有的包已经安装在自己的本地 `maven` 仓 `～/.m2.repository` le ,可以开始开发工作了
