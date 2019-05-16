@@ -165,6 +165,7 @@ sh ./stop.sh
 ## 6.4 Regression Test
 测试线上业务是否正常  
 ## 7. service
+## 7.1 服务清单  
 涉及到的服务器清单如下所示。
 
 | SSH | user | psword | note | env |
@@ -174,6 +175,16 @@ sh ./stop.sh
 | ssh sunbox@172.16.30.52 | root | s1n0_yhb_3 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
 | ssh sunbox@172.16.30.53 | root | s1n0_yhb_4 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
 | ssh sunbox@172.16.30.55 | root | s1n0_yhb_6 | 定时任务task | prod |
+## 7.2 启动顺序
+
+```
+50 -> 51 -> 52 -> 53 -> 55
+```
+## 7.3 停止顺序
+
+```
+55 -> 53 -> 52 -> 51 -> 50
+```
 
 # 7. 验证服务
 token kshop 生成，由kshop进行登录操作，操作完调用sunbox 的接口， post ，在post 的参数里或者cookie 里传 token。
