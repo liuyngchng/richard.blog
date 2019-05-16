@@ -40,21 +40,41 @@
 
 ## 2.3 磁盘块数
 采用不同数据库挂载不同磁盘的策略，共需要 5 块最终可用容量为 500GB 的磁盘
-# 3. 扩容步骤
-## 3.1 停 Service
+# 3. 预扩容
+由于涉及到 5 个库的迁移，先用 1 个数据量较小的库进行迁移，查看服务是否正常，进行验证。
+```
+ps -ef | grep java  -- 查看进程
+cd /home/sunbox/
+./stop-a.sh           -- 逐个停服务
+ps -ef | grep java  -- 检查是否全部停止
+ps -ef | grep mysqld        -- get process
+systemctl stop mysql        -- stop process
+ps -ef | grep mysqld        -- check process
+cd /var/lib/mysql
+mv game game_bck            -- mv dir
+mount disk2 /var/lib/mysql/game -- mount disk
+cd /var/lib/mysql/
+du -h --max-depth =1          -- check disk space
+cp -r game_bck game           -- hard copy mysql file
+systemctl start MySQL         -- start mysql
+grep '源端IP为' app-service.log --color
+curl http://172.16.30.51:18807/app/json/app_game/loadGameByCode -d  'gameTypeCode=DZP000000&token=80ADEBF0-F411-49B4-93CD-32767D9F8925'               -- read game database
+```
+# 4. 扩容步骤
+## 4.1 停 Service
 ```
 ps -ef | grep java  -- 查看进程
 ./stop.sh           -- 逐个停服务
 ps -ef | grep java  -- 检查是否全部停止
 ```
-## 3.2 停 DB
+## 4.2 停 DB
 ```
 ps -ef | grep mysqld        -- get process
 systemctl stop mysql        -- stop process
 ps -ef | grep mysqld        -- check process
 ```
 
-## 3.3 Mount disk
+## 4.3 Mount disk
 ```
 cd /var/lib/mysql
 mv account acccout_bck
@@ -67,13 +87,14 @@ mount disk2 /var/lib/mysql/game
 mount disk3 /var/lib/mysql/api_order
 mount disk4 /var/lib/mysql/market
 mount disk5 /var/lib/mysql/sunbox
+/etc/init.d/start mysqld
 ```
-## 3.4 Check space
+## 4.4 Check space
 ```
-cd /var/lib/mysql/*
+cd /var/lib/mysql/
 du -h --max-depth =1
 ```
-## 3.5 Copy data
+## 4.5 Copy data
 ```
 cd /var/lib/mysql
 cp -r account_bck acccout
@@ -88,7 +109,7 @@ sudo tar -cf /data/mysql1.tar ./mysql  # 162上测试，./mysql 为 100GB，打�
 cd /data
 tar -xf mysql.tar
 ```
-## 3.6 Start MySQL
+## 4.6 Start MySQL
 设置数据目录
 ```
 vi /et/my.conf
@@ -103,14 +124,14 @@ datadir=/data/mysql
 mysqld_safe --datadir=/data/mysql
 mysql -uroot -p    --check service
 ```
-## 3.7 Start Service
+## 4.7 Start Service
 ```
-cd ../service/
-./start.sh
+cd /home/sunbox/
+sh ./start-b.sh
 ```
-## 3.8 Regression Test
+## 4.8 Regression Test
 测试线上业务是否正常  
-# 4. DB backup  
+# 5. DB backup  
 
 | No| DB | disk | backup disk |  
 | -- | -- | -- | -- |  
@@ -119,13 +140,13 @@ cd ../service/
 | 3 | account | /data/mysql/game | /data/mysql/market |
 | 4 | account | /data/mysql/market | /data/mysql/sunbox |
 | 5 | account | /data/mysql/sunbox | /data/mysql/account |
-# 5. RollBack
-## 5.1 Stop Service
+# 6. RollBack
+## 6.1 Stop Service
 ```
 cd ./service
 sh ./stop.sh
 ```
-## 5.2 Start MySQL
+## 6.2 Start MySQL
 ```
 /etc/init.d/stop mysqld
 unmount disk
@@ -136,10 +157,28 @@ mv market_bck market
 mv sunbox_bck sunbox
 /etc/init.d/start mysqld
 ```
-## 5.3 Start Service
+## 6.3 Start Service
 ```
 cd ./service
 sh ./stop.sh
 ```
-## 5.4 Regression Test
+## 6.4 Regression Test
 测试线上业务是否正常  
+## 7. service
+涉及到的服务器清单如下所示。
+
+| SSH | user | psword | note | env |
+| -- | --| -- | -- | -- |
+| ssh sunbox@172.16.30.50 | root | s1n0_yhb_1 | nginx、web服务、报表服务 | prod |
+| ssh sunbox@172.16.30.51 | root | s1n0_yhb_2 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.52 | root | s1n0_yhb_3 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.53 | root | s1n0_yhb_4 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.55 | root | s1n0_yhb_6 | 定时任务task | prod |
+
+# 7. 验证服务
+token kshop 生成，由kshop进行登录操作，操作完调用sunbox 的接口， post ，在post 的参数里或者cookie 里传 token。
+由 AppLoginInterceptor  进行解码，验证token 是否正确
+```
+grep '源端IP为' app-service.log --color
+curl http://172.16.30.51:18807/app/json/app_game/loadGameByCode -d  'gameTypeCode=DZP000000&token=80ADEBF0-F411-49B4-93CD-32767D9F8925'
+```
