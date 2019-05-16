@@ -37,6 +37,7 @@
 ## 2.2 磁盘种类
 - 推荐 SSD 盘，读取速度快，不易损坏
 - 若使用普通磁盘，推荐做 RAID
+
 ## 2.3 磁盘块数
 采用不同数据库挂载不同磁盘的策略，共需要 5 块最终可用容量为 500GB 的磁盘
 # 3. 扩容步骤
@@ -52,22 +53,37 @@ ps -ef | grep mysqld        -- get process
 systemctl stop mysql        -- stop process
 ps -ef | grep mysqld        -- check process
 ```
+
 ## 3.3 Mount disk
 ```
-mount disk1 /data/mysql/acount
-mount disk2 /data/mysql/game
-mount disk3 /data/mysql/api_order
-mount disk4 /data/mysql/market
-mount disk5 /data/mysql/sunbox
+cd /var/lib/mysql
+mv account acccout_bck
+mv api_order api_order_bck
+mv game game_bck
+mv market market_bck
+mv sunbox sunbox_bck
+mount disk1 /var/lib/mysql/acount
+mount disk2 /var/lib/mysql/game
+mount disk3 /var/lib/mysql/api_order
+mount disk4 /var/lib/mysql/market
+mount disk5 /var/lib/mysql/sunbox
 ```
 ## 3.4 Check space
 ```
-cd /data/mysql/*
+cd /var/lib/mysql/*
 du -h --max-depth =1
 ```
 ## 3.5 Copy data
 ```
-cd /var/lib
+cd /var/lib/mysql
+cp -r account_bck acccout
+cp -r api_order_bck api_order
+cp -r game_bck game
+cp -r market_bck market
+cp -r sunbox_bck sunbox
+```
+备选方案
+```
 sudo tar -cf /data/mysql1.tar ./mysql  # 162上测试，./mysql 为 100GB，打包耗时 1h， /data 挂载的硬盘跟 ./mysql 挂载盘不同，机器配置与162相同
 cd /data
 tar -xf mysql.tar
@@ -85,13 +101,15 @@ datadir=/data/mysql
 启动服务
 ```
 mysqld_safe --datadir=/data/mysql
-mysql -uroot -p
+mysql -uroot -p    --check service
 ```
 ## 3.7 Start Service
 ```
 cd ../service/
 ./start.sh
 ```
+## 3.8 Regression Test
+测试线上业务是否正常  
 # 4. DB backup  
 
 | No| DB | disk | backup disk |  
@@ -101,3 +119,27 @@ cd ../service/
 | 3 | account | /data/mysql/game | /data/mysql/market |
 | 4 | account | /data/mysql/market | /data/mysql/sunbox |
 | 5 | account | /data/mysql/sunbox | /data/mysql/account |
+# 5. RollBack
+## 5.1 Stop Service
+```
+cd ./service
+sh ./stop.sh
+```
+## 5.2 Start MySQL
+```
+/etc/init.d/stop mysqld
+unmount disk
+mv account_bck acccout
+mv api_order_bck api_order
+mv game_bck game
+mv market_bck market
+mv sunbox_bck sunbox
+/etc/init.d/start mysqld
+```
+## 5.3 Start Service
+```
+cd ./service
+sh ./stop.sh
+```
+## 5.4 Regression Test
+测试线上业务是否正常  
