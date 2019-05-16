@@ -170,11 +170,11 @@ sh ./stop.sh
 
 | SSH | user | psword | note | env |
 | -- | --| -- | -- | -- |
-| ssh sunbox@172.16.30.50 | root | s1n0_yhb_1 | nginx、web服务、报表服务 | prod |
-| ssh sunbox@172.16.30.51 | root | s1n0_yhb_2 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
-| ssh sunbox@172.16.30.52 | root | s1n0_yhb_3 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
-| ssh sunbox@172.16.30.53 | root | s1n0_yhb_4 | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
-| ssh sunbox@172.16.30.55 | root | s1n0_yhb_6 | 定时任务task | prod |
+| ssh sunbox@172.16.30.50 | root |   | nginx、web服务、报表服务 | prod |
+| ssh sunbox@172.16.30.51 | root |   | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.52 | root |   | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.53 | root |   | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
+| ssh sunbox@172.16.30.55 | root |   | 定时任务task | prod |
 ## 7.2 启动顺序
 
 ```
