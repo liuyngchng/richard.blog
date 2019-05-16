@@ -11,8 +11,9 @@
 | 2 | 分库分表 | 简单易用的分库分表策略，支持横向扩展 |
 | 3 | 埋点 | 可以轻易地在类的方法中进行业务埋点，使业务代码更加优雅 |
 | 4 | 定时任务 | 轻松配置定时任务，进行数据的聚合、`ETL` |
-| 5 | 服务器资源监控 | 提供对服务器硬盘、`CPU` 等资源的监控 |
-| 6 | 服务监控 | 提供对服务的监控，灵活的触发机制配置，如短信报警等 |
+| 5 | `CI` , `CD`| 提供简单易用的持续集成、持续部署 |
+| 6 | 服务器资源监控 | 提供对服务器硬盘、`CPU` 等资源的监控 |
+| 7 | 服务监控 | 提供对服务的监控，灵活的触发机制配置，如短信报警等 |
 ## 1.2 主要特点
 | No | function | Note |
 | -- | -- | -- |
@@ -22,7 +23,11 @@
 | 4 |  持续更新升级 | `sunbox` 框架由专业团队维护，跟踪市场变化，满足企业的各种需求 |
 | 5 | 技术支持 | 由专业团队提供技术支持 |
 # 2. 系统架构
-## 2.1 架构设计
+## 2.2 功能模块
+![sunboxArch](./sunbox_architech.png)
+## 2.1 架构设计  
+
+![sunboxProjArch](./sunbox_proj_arch.png)
 
 ## 2.2 项目清单
 项目结构如表 2 所示。  
@@ -32,20 +37,20 @@
 | -- | -- | -- |
 | 1 | pom.xml | pom-parent，配置公共依赖，以及开源项目的版本 |
 | 2 | sunbox-agent | 服务监控，如数据库连接数等 |
-| 3 | sunbox-api | API, 接口定义 |
-| 4 | sunbox-base | 文件上传，以及 接口返回数据类型配置的抽象（xml，json） |
-| 5 | sunbox-batch-recharge | 批量充值? psw_en， native 实现了一个报文摘要获取的方法？ |
-| 6 | sunbox-cloud | |
-| 7 | sunbox-core | REST API 框架抽象，埋点代码块逻辑判断实现，各种结构化数据和非结构化数据库连接池管理，DAO 层抽象，分区表抽象，线程池的封装， XSS 拦截，常用的拦截器的实现，SQL 语句执行抽象，|
-| 8| sunbox-import | `CFCA` 认证？ |
-| 9 | sunbox-jmx | agent 实现？ 监控系统资源？ |
-| 10 | sunbox-plugins | 第三方服务封装，如 `com.aliyun.oss`， `token` 认证，充电桩业务，人脸识别，OCR ，netty 封装，支付回调， 阿里，微信api 的封装 |
+| 3 | sunbox-api | 营销类业务通用 API |
+| 4 | sunbox-base | 框架配置，实现 |
+| 5 | sunbox-batch-recharge | 第三方业务（忽略） |
+| 6 | sunbox-cloud |业务（忽略） |
+| 7 | sunbox-core | 框架核心实现，`REST API` 框架抽象，埋点代码块逻辑判断实现，各种结构化数据和非结构化数据库连接池管理，`DAO` 层抽象，`Partition`抽象，线程池的封装， `XSS` 拦截，常用的拦截器的实现，`SQL` 语句执行抽象，|
+| 8| sunbox-import | 自动化部署实现 |
+| 9 | sunbox-jmx | agent 实现， 通过 `JMX` 获取 `JVM` 信息 |
+| 10 | sunbox-plugins | 第三方服务封装，如 `com.aliyun.oss`， `token` 认证，充电桩业务，人脸识别，OCR ，netty 封装，支付回调， 阿里，微信 `API` 的封装 |
 | 11 | sunbox-pom | 是一个父工程，定义了其子工程，可按需打包 |
-| 12 | sunbox-sqlmanagement | SQL 语句管理，如根据datasource 关键字定位数据源|
+| 12 | sunbox-sqlmanagement | SQL 语句管理，如根据 `datasource` 关键字定位数据源|
 | 13 | sunbox-test | 几种注解的封装，用于 REST API |
 | 14 | sunbox-tools | 与 kshop 框架交互工具类 |
-| 15 | sunbox-web | web 常用的一些静态资源， js,css, 字体 |
-| 16 | sunbox-web-parent | 在线商城使用的一些静态资源 |
+| 15 | sunbox-web | web 常用的一些静态资源， js,css, 字体 （忽略） |
+| 16 | sunbox-web-parent | 在线商城使用的一些静态资源 (忽略)|
 # 3. Best practice
 ## 3.1 Model
 对应数据库中的表结构
