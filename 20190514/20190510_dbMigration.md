@@ -194,5 +194,5 @@ token kshop 生成，由kshop进行登录操作，操作完调用sunbox 的接�
 由 AppLoginInterceptor  进行解码，验证token 是否正确
 ```
 grep '源端IP为' app-service.log --color
-curl http://172.16.30.51:18807/app/json/app_game/loadGameByCode -d  'gameTypeCode=DZP000000&token=80ADEBF0-F411-49B4-93CD-32767D9F8925'
+curl http://172.16.30.51:18807/app/json/app_game/loadGameByCode -d  'gameTypeCode=DZP000000&token=80ADEBF'
 ```
