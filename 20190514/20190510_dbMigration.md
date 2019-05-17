@@ -1,11 +1,13 @@
 # 1. Context
 ## 1.1 DB info
+
 | Key | Value |
-| -- | -- |
+| --- | --- |
 | DB | MySQL |
 | IP | 10.179.201.161 |
 | 实例 | 1 |
 | 数据库数量 | 5 |
+
 ## 1.2 Disk space
 ```shell
 [root@yhb-db1 mysql]# du -h --max-depth=1  
@@ -27,13 +29,14 @@
 ## 2.1 数据库磁盘空间预估  
 
 | No | db | Disk Space | Note | disk |
-| -- | -- | -- | -- | -- |
+| --- | --- | --- | --- | --- |
 | 1  | account | 500GB | 100GB/Y * 5 | f |
 | 2 | api_order | 500GB | 100GB/Y * 5 | g |
 | 3 | game | 500GB | 100GB/Y * 5 | h |
 | 4 |  market | 500GB | 100GB/Y * 5 | i |
 | 5 | sunbox | 500GB | 100GB/Y * 5 | j |
 | 6 | 总计 | 5 TB | 5 块 500GB 的磁盘, 另需 2.5TB 用于数据备份 |  * |
+
 ## 2.2 磁盘种类
 - 推荐 SSD 盘，读取速度快，不易损坏
 - 若使用普通磁盘，推荐做 RAID
@@ -134,7 +137,7 @@ sh ./start-b.sh
 # 5. DB backup  
 
 | No| DB | disk | backup disk |  
-| -- | -- | -- | -- |  
+| --- | --- | --- | --- |
 | 1 | account | /data/mysql/account | /data/mysql/api_order |
 | 2 | account | /data/mysql/api_order | /data/mysql/api_order |
 | 3 | account | /data/mysql/game | /data/mysql/market |
@@ -169,7 +172,7 @@ sh ./stop.sh
 涉及到的服务器清单如下所示。
 
 | SSH | user | psword | note | env |
-| -- | --| -- | -- | -- |
+| --- | --- | --- | --- | --- |
 | ssh sunbox@172.16.30.50 | root |   | nginx、web服务、报表服务 | prod |
 | ssh sunbox@172.16.30.51 | root |   | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
 | ssh sunbox@172.16.30.52 | root |   | nginx、App服务、中控服务、绑卡定时任务服务 | prod |
