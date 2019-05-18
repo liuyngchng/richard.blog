@@ -22,11 +22,12 @@
 ## 1.2 主要特点
 | No | function | Note |
 | -- | -- | -- |
-| 1 | 数据源封装 | 将 `MySQL`, `SQLServer`, `Oracle`, `SyBas`e, `MongoDB`, `SQLServer` 以统一的 `API` 进行封装，提供简单易用的 API 进行调用 |
+| 1 | 数据源封装 | 将 `MySQL`, `SQLServer`, `Oracle`, `SyBase`, `MongoDB`, `SQLServer` 以统一的 `API` 进行封装，提供简单易用的 API 进行调用 |
 | 2 | ORM | 提供统一的 ORM API， 隐藏了不同数据源的差异性,简单易用 |
 | 3 | 完善的文档 | 提供完善的开发文档，以及最佳实践 Demo |
 | 4 |  持续更新升级 | `sunbox` 框架由专业团队维护，跟踪市场变化，满足企业的各种需求 |
 | 5 | 技术支持 | 由专业团队提供技术支持 |
+
 # 2. 系统架构
 ## 2.2 功能模块
 ![sunboxArch](./sunbox_architech.png)
