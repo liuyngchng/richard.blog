@@ -55,12 +55,22 @@
 | 13 | sunbox-web | web 常用的一些静态资源 |
 # 3. Best practice
 ## 3.1 Model
-对应数据库中的表结构
-## 3.2 VO
-## 3.3 DBManager
-## 3.4 Scheduled task
-## 3.5 埋点
-## 3.6 分库分表
+对应数据库中的表结构  
+
+## 3.2 VO  
+
+## 3.3 DBManager  
+
+## 3.4 Scheduled task 
+
+
+## 3.5 BuriedIn business
+
+埋点业务  
+
+## 3.6 Partition
+database, table partition  
+
 # 4. mvn package
 ```
 cd {WORKSPACE_DIR}  
