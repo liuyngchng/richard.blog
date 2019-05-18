@@ -1,6 +1,10 @@
 # 1. 简介
- `sunbox` 框架主要用于处理数据密集型的业务，可以将企业的业务从繁杂的数据库操作中解放出来，帮助企业极大地提高生产力。
+
+ `sunbox` 框架主要用于处理数据密集型的业务，可以将企业的业务从繁杂的数据库操作中解放出来，
+ 帮助企业极大地提高生产力。
+
 ## 1.1 功能模块
+
 `sunbox` 框架主要功能如表 1 所示。
 
 表 1 功能模块  
@@ -14,6 +18,7 @@
 | 5 | `CI` , `CD`| 提供简单易用的持续集成、持续部署 |
 | 6 | 服务器资源监控 | 提供对服务器硬盘、`CPU` 等资源的监控 |
 | 7 | 服务监控 | 提供对服务的监控，灵活的触发机制配置，如短信报警等 |
+
 ## 1.2 主要特点
 | No | function | Note |
 | -- | -- | -- |
@@ -37,20 +42,17 @@
 | -- | -- | -- |
 | 1 | pom.xml | pom-parent，配置公共依赖，以及开源项目的版本 |
 | 2 | sunbox-agent | 服务监控，如数据库连接数等 |
-| 3 | sunbox-api | 营销类业务通用 API |
+| 3 | sunbox-api | 领域通用 API |
 | 4 | sunbox-base | 框架配置，实现 |
-| 5 | sunbox-batch-recharge | 第三方业务（忽略） |
-| 6 | sunbox-cloud |业务（忽略） |
-| 7 | sunbox-core | 框架核心实现，`REST API` 框架抽象，埋点代码块逻辑判断实现，各种结构化数据和非结构化数据库连接池管理，`DAO` 层抽象，`Partition`抽象，线程池的封装， `XSS` 拦截，常用的拦截器的实现，`SQL` 语句执行抽象，|
-| 8| sunbox-import | 自动化部署实现 |
-| 9 | sunbox-jmx | agent 实现， 通过 `JMX` 获取 `JVM` 信息 |
-| 10 | sunbox-plugins | 第三方服务封装，如 `com.aliyun.oss`， `token` 认证，充电桩业务，人脸识别，OCR ，netty 封装，支付回调， 阿里，微信 `API` 的封装 |
-| 11 | sunbox-pom | 是一个父工程，定义了其子工程，可按需打包 |
-| 12 | sunbox-sqlmanagement | SQL 语句管理，如根据 `datasource` 关键字定位数据源|
-| 13 | sunbox-test | 几种注解的封装，用于 REST API |
-| 14 | sunbox-tools | 与 kshop 框架交互工具类 |
-| 15 | sunbox-web | web 常用的一些静态资源， js,css, 字体 （忽略） |
-| 16 | sunbox-web-parent | 在线商城使用的一些静态资源 (忽略)|
+| 5 | sunbox-core | 框架核心实现，`REST API` 领域知识抽象|
+| 6| sunbox-import | 自动化部署实现 |
+| 7 | sunbox-jmx | agent 实现， 通过 `JMX` 获取 `JVM` 信息 |
+| 8 | sunbox-plugins | 第三方服务封装 |
+| 9 | sunbox-pom | 是一个父工程，定义了其子工程，可按需打包 |
+| 10 | sunbox-sqlmanagement | SQL 语句管理|
+| 11 | sunbox-test | 测试 |
+| 12 | sunbox-tools | 工具类 |
+| 13 | sunbox-web | web 常用的一些静态资源 |
 # 3. Best practice
 ## 3.1 Model
 对应数据库中的表结构
