@@ -96,16 +96,8 @@ du -h --max-depth =1
 ```
 ## 4.5 Copy data
 ```
-cd /var/lib/mysql
-cp -r account_bck acccout
-cp -r api_order_bck api_order
-cp -r game_bck game
-cp -r market_bck market
-cp -r sunbox_bck sunbox
-```
-备选方案
-```
-sudo tar -cf /data/mysql1.tar ./mysql  # 162上测试，./mysql 为 100GB，打包耗时 1h， /data 挂载的硬盘跟 ./mysql 挂载盘不同，机器配置与162相同
+cd /var/lib
+sudo tar -cf /data/mysql.tar ./mysql  # 162上测试，./mysql 为 100GB，打包耗时 1h， /data 挂载的硬盘跟 ./mysql 挂载盘不同，机器配置与162相同
 cd /data
 tar -xf mysql.tar
 ```
@@ -136,10 +128,10 @@ sh ./start-b.sh
 | No| DB | disk | backup disk |  
 | -- | -- | -- | -- |  
 | 1 | account | /data/mysql/account | /data/mysql/api_order |
-| 2 | account | /data/mysql/api_order | /data/mysql/api_order |
-| 3 | account | /data/mysql/game | /data/mysql/market |
-| 4 | account | /data/mysql/market | /data/mysql/sunbox |
-| 5 | account | /data/mysql/sunbox | /data/mysql/account |
+| 2 | api_order | /data/mysql/api_order | /data/mysql/api_order |
+| 3 | game | /data/mysql/game | /data/mysql/market |
+| 4 | market | /data/mysql/market | /data/mysql/sunbox |
+| 5 | sunbox | /data/mysql/sunbox | /data/mysql/account |
 # 6. RollBack
 ## 6.1 Stop Service
 ```
