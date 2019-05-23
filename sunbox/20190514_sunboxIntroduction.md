@@ -65,24 +65,30 @@
 | 11 | sunbox-test | 测试 |
 | 12 | sunbox-tools | 工具类 |
 | 13 | sunbox-web | web 常用的一些静态资源 |
+
 # 3. Best practice
-## 3.1 Model
-对应数据库中的表结构  
+## 3.1 Model  
+
+接口层传值对象，为了方便与 VO 互相转换，对应 table 的 schema
+
+| No | item | model | db |
+| :---- | :--- |:--- |:--- |
+| 1 | type | Integer | int |
+| 2 | type | String | varchar |
+| 3 | name | myNme | my_name |
 
 ## 3.2 VO  
 
-## 3.3 DBManager  
-
-## 3.4 Scheduled task 
-
-
-## 3.5 BuriedIn business
-
-埋点业务  
-
-## 3.6 Partition
-database, table partition  
-
+对应 table 的 schema
+Integer <-> int
+String <-> varchar
+update 方法，可直接将数据刷入 DB
+```
+VO vo = new VO();
+vo.setFieldA(a);
+vo.load();
+vo.update();
+```
 对应数据库中的表结构， 例如数据库表结构如下，
 ```
 mysql> desc acct_card_activate;
@@ -110,11 +116,52 @@ public class AcctCardActivateModel {
     private  String customPhone;
 }
 ```
-## 3.2 VO
-## 3.3 DBManager
+
+## 3.3 DBManager  
+
+```
+import sunbox.core.conn.DBManager
+DBManager db=new DBManager(poolName);
+db.sendQuery("SELECT xxxx FROM account.acct_card_activate WHERE xxxx");
+List<AcctAccountYoudi> list = db.getObjects(AcctAccountYoudi.class);
+```
+
 ## 3.4 Scheduled task
-## 3.5 埋点
-## 3.6 分库分表
+
+处理一些定时任务，实现数据聚合、业务补偿等
+```
+INSERT INTO `sunbox`.`base_stat_task` (`task_code`, `task_type`, `task_config`, `task_name`, `task_method`, `exec_period`, `status`, `create_time`, `create_by`, `modify_time`) VALUES ('acct.youdi_active_vice_card', '1', 'cron=0 0 2 * * ?', 'xxxxx', 'sunbox.hbsy.action.task.ViceCardActiveTaskAction', '每天凌晨2点执行一次', '0', '2019-05-20 15:40:07', 'webmaster', '2019-05-20 15:40:07');
+```
+
+## 3.5 BuriedIn business
+
+埋点业务  
+
+```
+class MyClass {
+   public void myMethod() {
+     doSomething();
+     Application.doStaticExecute("market.before.start.order.activity", this);
+     doOtherThings();
+     Application.doExecute("market.valid.order.activity", this);
+     needCleanSomething();
+   }
+}
+```
+
+## 3.6 Partition
+
+实现数据库、表的横向扩展、自动分区  
+```
+SELECT
+    *
+FROM
+    sunbox.app_conf_detail
+WHERE
+    name LIKE '%account%';
+account.database.tablepatition = 64
+```
+
 # 4. mvn package
 ```
 cd {WORKSPACE_DIR}  
@@ -124,4 +171,75 @@ source /etc/profile
 cd {WORKSPACE_DIR}/sunbox-pom/  
 mvn clean compile package -Dsunbox-group-version=1.0
 ```
-这样 所有的包已经安装在自己的本地 `maven` 仓 `～/.m2.repository` le ,可以开始开发工作了
+这样 所有的包已经安装在自己的本地 `maven` 仓 `～/.m2.repository` 了 ,可以开始开发工作了
+
+# 5. FAQ
+## 5.1 ORM 与 开源 ORM 的区别  
+
+sunbox 框架的 ORM 更加轻量级， 比 `MyBatis`， `Hibernate` 配置更简单，而且学习曲线更加平滑，上手更快 散列  
+
+## 5.2 分库分表的键值有那些？
+
+- 年，月，日
+- id
+- hash 散列
+
+## 5.3 什么是埋点？  
+
+埋点是`sunbox`框架的一个重要特性， 类似与 hook 程序，或者我们经常用到的 `AOP`， 只不过埋点实在 method 的方法体内部执行埋点逻辑。
+
+## 5.4 定时任务的优势在哪里？
+
+- `sunbox` 框架的定时任务配置更加灵活，与`sunbox`框架提供的其他特性可以结合使用;
+- 与 linux `crontab` 比较，部署之后无需进行其他配置，提供的是`one-stop`的解决方案
+- 与常用的 `Spring` 的定时任务相比较， `Spring` 需要启动`Spring`容器，而 `sunbox`框架定时任务更加轻量;
+-
+
+## 5.5 CI 、CD 为什么不使用第三方开源框架？
+
+- 第三方开源框架也会涉及到 `license` 协议的问题，对于一些大客户来讲，可能有潜在法律风险;
+- `sunbox` 的 `CI`、`CD` 是 `one-stop`的解决方案，无需额外的环境搭建，节约了人力和时间成本;
+- `sunbox` 对第三方`CI`、`CD` 框架的集成是开放的;
+- `sunbox`的`CI`、`CD`更加轻量级;
+
+## 5.6 监控为什么不使用第三方开源框架
+
+原因同 `5.5` 节。
+
+## 5.7 ORM Model 是否有工具可自动生成
+
+- 目前尚无此功能
+- 后续可以添加
+- `sunbox` 的数据类型映射关系相对来讲更简单，数字、字符串 2 种常用的类型，基本上不需要工具，也可以写出来`VO`类。
+
+## 5.8 为什么提供 `DBManager` 这种直接写`SQL`的功能？
+
+- 主要为了考虑`sunbox`框架的扩展性
+- 在一些特定的、极其少见的复杂 `case` 下， 简单的映射关系可能无法满足业务需求，这时候就可以借助`DBManager` 直接实现业务功能
+
+## 5.9 数据库连接池是否有`cache`功能？
+
+- 框架采用的是配置信息的2级缓存机制;
+- 第1级为`JVM`运行时缓存，`HashMap`;
+- 第2级为`Redis`缓存;
+- 当 1,2 级缓存均未命中时，读取数据库，同时依靠版本管理机制来刷新1,2级缓存
+
+## 5.10 框架代码是否采取了加密机制？
+
+- 目前尚未对`sunbox`框架代码进行加密
+- 后续可以完善这部分的内容;
+
+## 5.11 框架的认证授权机制是怎样的？
+
+- 框架有内置的认证授权机制;
+- 企业内部使用`sunbox`框架的多个项目之间可以实现`SSO`;
+- 框架对集成第三方的`CA`系统开放;
+
+## 5.12 是否有可视化的运维界面？
+- 框架内部提供常规的监控界面;
+- 可以实现常规的运营需求;
+
+## 5.13 框架的学习曲线是什么样的？
+
+- `sunbox`框架提供有完善的中文开发文档，学习曲线比较平缓;
+- 对于有2～3年开发经验的开发人员，可轻松上手;
